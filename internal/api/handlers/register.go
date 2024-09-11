@@ -53,18 +53,21 @@ func upload(queries *db.Queries) http.HandlerFunc {
 		log.Debugf("header.Filename: %v\n", header.Filename)
 		hash := uuid.NewSHA1(uuid.NameSpaceURL, []byte(header.Filename+creator+title))
 		log.Debugf("hash: %v\n", hash.String())
-		if err := hls.ConvertStream("hls", hash.String(), file); err != nil {
-			log.Error(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
 
+        log.Debugf("storing media in the database")
 		if err := queries.CreateMedia(r.Context(), db.CreateMediaParams{
 			Hash:    hash.String(),
 			Title:   title,
 			Creator: creator,
 		}); err != nil {
 			log.Errorln(err.Error())
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+        log.Debugf("converting media to hls data")
+		if err := hls.ConvertStream("hls", hash.String(), file); err != nil {
+			log.Error(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
