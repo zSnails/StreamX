@@ -6,9 +6,15 @@
     <body style="display: flex; margin-left: auto; margin-right: auto; object-fit: fill; height: 90vh">
         <div style="margin-left: auto; margin-right: auto; margin-top: auto; margin-bottom: auto;">
             <form action="/api/upload" method="POST" enctype="multipart/form-data">
+                <label for="title">Title</label>
+                <input name="title" id="title" type="text" required />
+
+                <label for="creator">Creator</label>
+                <input name="creator" id="creator" type="text" required />
+
                 <label for="file">File</label>
-                <input name="media" id="media" type="file" />
-                <button>Upload</button>
+                <input name="media" id="media" type="file" required />
+                <button type="submit">Upload</button>
             </form>
         </div>
     </body>
