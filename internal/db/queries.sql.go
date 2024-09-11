@@ -54,11 +54,11 @@ func (q *Queries) CreateMedia(ctx context.Context, arg CreateMediaParams) error 
 }
 
 const findMedia = `-- name: FindMedia :many
-SELECT id, hash, title, creator FROM media WHERE title ILIKE $1
+SELECT id, hash, title, creator FROM media WHERE SIMILARITY(title, $1) > 0.1
 `
 
-func (q *Queries) FindMedia(ctx context.Context, title string) ([]Medium, error) {
-	rows, err := q.db.Query(ctx, findMedia, title)
+func (q *Queries) FindMedia(ctx context.Context, similarity string) ([]Medium, error) {
+	rows, err := q.db.Query(ctx, findMedia, similarity)
 	if err != nil {
 		return nil, err
 	}
@@ -80,4 +80,15 @@ func (q *Queries) FindMedia(ctx context.Context, title string) ([]Medium, error)
 		return nil, err
 	}
 	return items, nil
+}
+
+const mediaExists = `-- name: MediaExists :one
+SELECT exists (SELECT 1 FROM media WHERE hash = $1 LIMIT 1)
+`
+
+func (q *Queries) MediaExists(ctx context.Context, hash string) (bool, error) {
+	row := q.db.QueryRow(ctx, mediaExists, hash)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
 }
