@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
 	"net/http"
-	"os"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/jackc/pgx/v5"
+	api "github.com/zSnails/streamx/internal/api/handlers"
 	"github.com/zSnails/streamx/internal/api/middleware"
-	"github.com/zSnails/streamx/internal/services/hls"
+	"github.com/zSnails/streamx/internal/db"
 	"github.com/zSnails/streamx/pkg/logging"
 )
 
@@ -18,16 +21,22 @@ func main() {
 
 	}))
 	mux.CORSMethodMiddleware(r)
-	log.Infoln(os.Getwd())
-
 	r.Use(middleware.Logger)
-	// TODO: remove this piece of shit, only used for development
-	r.HandleFunc("/convert", func(w http.ResponseWriter, r *http.Request) {
-		hls.Convert("hls", "furina", "furina-bg-processed.mp4")
+	ctx := context.Background()
+	conn, err := pgx.Connect(ctx, "postgresql://postgres@localhost")
+	if err != nil {
+		log.Panic(err)
+	}
+
+	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "index.html")
 	})
+
+	queries := db.New(conn)
+	api.API(r, queries)
 	r.Handle("/{hash}/{file}", middleware.FilesMW(http.FileServer(http.Dir("hls"))))
 
-	if err := http.ListenAndServe(":8080", r); err != nil {
+	if err := http.ListenAndServe(":8080", handlers.CORS()(r)); err != nil {
 		log.Panic(err)
 	}
 }
