@@ -93,7 +93,14 @@ func search(queries *db.Queries) http.HandlerFunc {
 			return
 		}
 
-		if err = json.NewEncoder(w).Encode(media); err != nil {
+		resp := &searchResponse{}
+		if media != nil {
+			resp.Media = media
+			resp.Count = len(media)
+		} else {
+			resp.Media = []db.Medium{}
+		}
+		if err = json.NewEncoder(w).Encode(resp); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
