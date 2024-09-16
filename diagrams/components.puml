@@ -1,0 +1,20 @@
+@startuml
+package "Frontend" {
+  [User Interface]  
+}
+
+package "Backend" {
+  [Go Server]  
+  [Nginx]
+  [PostgreSQL]
+  [Media Storage]
+}
+
+"User Interface" --> Nginx: HTTP Requests
+Nginx --> "Go Server": Redirigir Solicitud
+"Go Server" --> PostgreSQL: Consultar/Actualizar Datos
+"Go Server" --> "Media Storage": Solicitar Fragmentos HLS
+"Go Server" --> Nginx: Responder Solicitud
+Nginx --> "User Interface": Enviar Fragmentos HLS
+
+@enduml

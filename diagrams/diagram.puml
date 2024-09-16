@@ -1,0 +1,27 @@
+@startuml
+actor User
+
+User -> Nginx: Enviar solicitud destreaming
+Nginx -> Server: Redirigir solicitud de streaming (Load Balancing)
+database PostgreSQL
+Server -> PostgreSQL: Consultar metadatos de contenido
+PostgreSQL -> Server: Devolver metadatos
+Server -> Nginx: Devolver metadatos
+Nginx -> User: Devolver metadatos
+User -> Nginx: Solicitar fragmentos HLS
+Nginx -> Server: Solicitar fragmentos HLS
+collections MediaStorage
+Server -> MediaStorage: Solicitar fragmentos HLS
+MediaStorage -> Server: Devolver fragmentos HLS
+/' Server -> Cache: Almacenar fragmentos populares (opcional) '/
+Server -> Nginx: Enviar fragmentos HLS (vía HTTP)
+Nginx -> User: Enviar fragmentos HLS (vía HTTP)
+
+/' == Caching Enabled ==
+User -> Nginx: Nueva solicitud para contenido cacheado
+Nginx -> Server: Redirigir solicitud
+Server -> Cache: Verificar si el contenido está en cache
+Cache -> Server: Devolver contenido cacheado
+Server -> User: Enviar contenido cacheado '/
+
+@enduml
