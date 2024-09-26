@@ -69,7 +69,6 @@ func main() {
 
 	log.Infof("connecting to postgres database using user %s\n", dbUser)
 	conn, err := pgxpool.New(ctx, getPostgresConnectionString())
-	// conn, err := pgx.Connect(ctx, getPostgresConnectionString())
 	if err != nil {
 		log.Panic(err)
 	}
@@ -80,8 +79,6 @@ func main() {
 
 	queries := db.New(conn)
 	api.API(r, queries, conn)
-	// r.Handle("/{hash}/{file}", middleware.FilesMW(http.FileServer(http.Dir("hls"))))
-
 	if err := http.ListenAndServe(instancePort, handlers.CORS()(r)); err != nil {
 		log.Panic(err)
 	}
