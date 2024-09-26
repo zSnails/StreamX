@@ -4,6 +4,15 @@
 
 package db
 
+import (
+	"github.com/jackc/pgx/v5/pgtype"
+)
+
+type MediaFile struct {
+	Name    pgtype.Text
+	Fileoid pgtype.Uint32
+}
+
 type Medium struct {
 	ID      int32
 	Hash    string
