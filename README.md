@@ -39,7 +39,6 @@ cd streamx-backend
 2. **Configurar las variables de entorno**: Crea un archivo `.env` con las siguientes variables:
 
 ```bash
-Copy code
 DB_USER=
 DB_PASSWORD=
 DB_HOST=
