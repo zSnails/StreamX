@@ -8,3 +8,5 @@ CREATE TABLE media (
 );
 
 CREATE INDEX idx_media_title_gin ON media USING GIN (title gin_trgm_ops);
+
+CREATE TABLE media_files (name varchar(64), fileoid oid);
