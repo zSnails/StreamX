@@ -25,7 +25,6 @@ func serve(q *db.Queries, conn *pgxpool.Pool) http.HandlerFunc {
 		lobs := tx.LargeObjects()
 
 		log.Debugf("vars: %+v\n", vars)
-
 		hash, ok := vars["file-hash"]
 		if !ok {
 			log.Error("missing file hash")
