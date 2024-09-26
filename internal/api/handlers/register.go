@@ -100,6 +100,11 @@ func upload(q *db.Queries, conn *pgxpool.Pool) http.HandlerFunc {
 		for _, file := range dir {
 			log.Debugf("file.Name(): %v\n", file.Name())
 			content, err := os.ReadFile(filepath.Join("hls", hsh, file.Name()))
+			if err != nil {
+				log.Error(err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
 			lobs := tx.LargeObjects()
 			log.Info("Creating large object")
 			objId, err := lobs.Create(r.Context(), 0)
