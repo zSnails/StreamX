@@ -1,0 +1,7 @@
+procs:
+  server-1:
+    cmd: ["./streamx", "-port", ":8081"]
+  server-2:
+    cmd: ["./streamx", "-port", ":8082"]
+  server-3:
+    cmd: ["./streamx", "-port", ":8083"]
