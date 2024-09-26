@@ -115,6 +115,7 @@ func upload(q *db.Queries, conn *pgxpool.Pool) http.HandlerFunc {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
+			defer obj.Close() // BUG: OOOPS FORGOT TO CLOSE THE LARGE OBJECT
 
 			wrote, err := obj.Write(content)
 			if err != nil {

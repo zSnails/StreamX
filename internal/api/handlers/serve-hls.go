@@ -49,6 +49,7 @@ func serve(q *db.Queries, conn *pgxpool.Pool) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+		defer lob.Close()
 
 		log.Debugf("lob: %+v\n", lob)
 		buffered := bufio.NewReader(lob)
