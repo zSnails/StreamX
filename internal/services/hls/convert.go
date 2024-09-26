@@ -1,7 +1,6 @@
 package hls
 
 import (
-	"fmt"
 	"mime/multipart"
 	"os"
 	"os/exec"
@@ -19,8 +18,8 @@ func ConvertStream(outdir, hash string, stream multipart.File) error {
 
 	cmd := exec.Command(
 		"ffmpeg",
-		"-i",
-		"pipe:",
+        "-i",
+        "pipe:",
 		"-c",
 		"copy",
 		"-f",
@@ -28,12 +27,12 @@ func ConvertStream(outdir, hash string, stream multipart.File) error {
 		"-segment_time",
 		"10",
 		"-segment_list",
-		path.Join(outdir, hash, fmt.Sprintf("%s.m3u8", hash)),
+		path.Join(outdir, hash, "outputlist.m3u8"),
 		"-segment_format",
 		"mpegts",
-		path.Join(outdir, hash, fmt.Sprintf("%s%s.ts", hash, "%03d")),
+		path.Join(outdir, hash, "output%03d.ts"),
 	)
-	cmd.Stdin = stream
+    cmd.Stdin = stream
 	cmd.Stdout = log.Writer()
 	cmd.Stderr = log.Writer()
 	if err := cmd.Run(); err != nil {
