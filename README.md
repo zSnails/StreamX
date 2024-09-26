@@ -70,7 +70,15 @@ http {
     }
 }
 ```
-4. **Lanzar las instancias del servidor con mprocs**: Usa mprocs para lanzar las tres
+
+4. **Compilar el Servidor de Backend**: Desde la carpeta principal del proyecto
+   ejecuta el siguiente comando.
+
+```bash
+go build ./cmd/streamx
+```
+
+5. **Lanzar las instancias del servidor con mprocs**: Usa mprocs para lanzar las tres
    instancias del servidor en puertos diferentes. Crea un archivo de configuración
    para mprocs y ejecuta el siguiente comando `mprocs`:
 
