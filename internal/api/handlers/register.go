@@ -91,7 +91,8 @@ func upload(q *db.Queries, conn *pgxpool.Pool) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		dir, err := os.ReadDir(filepath.Join("hls", hsh))
+		fpj := filepath.Join("hls", hsh)
+		dir, err := os.ReadDir(fpj)
 		if err != nil {
 			log.Error(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -149,9 +150,10 @@ func upload(q *db.Queries, conn *pgxpool.Pool) http.HandlerFunc {
 			}
 		}
 
-		if err := os.RemoveAll(filepath.Join("hls", hsh)); err != nil {
+		if err := os.RemoveAll(fpj); err != nil {
 			log.Error(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
 
 		if err := tx.Commit(r.Context()); err != nil {
