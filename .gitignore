@@ -3,5 +3,4 @@
 hls/**/*.m3u8
 hls/**/*.ts
 ./streamx
-paper
 .env
