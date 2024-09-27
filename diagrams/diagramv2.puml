@@ -1,0 +1,39 @@
+@startuml
+!define RECTANGLE
+
+skinparam rectangle {
+    BackgroundColor White
+    BorderColor Black
+    RoundCorner 15
+    Shadowing false
+}
+
+package "Frontend" {
+  [User Interface]  
+}
+
+package "Backend" {
+  
+  package "Nginx" {
+    [Load Balancer]
+  }
+
+  package "Application Layer" {
+    rectangle "Go Server" {
+      [API Layer]
+      [Streaming Service]
+    }
+  }
+
+  package "Storage Layer" {
+    [PostgreSQL (Blob Storage)]
+  }
+}
+
+"User Interface" --> "Load Balancer": Solicitudes de Usuarios
+"Load Balancer" --> "API Layer": Redirigir Solicitudes
+"API Layer" --> "PostgreSQL (Blob Storage)": Almacenar nuevo contenido multimedia
+"Streaming Service" --> "PostgreSQL (Blob Storage)": Consultar/Recuperar archivos blob y metadatos
+"Streaming Service" --> "Load Balancer": Entregar fragmentos HLS
+"Load Balancer" --> "User Interface": Enviar HLS a Cliente
+@enduml
